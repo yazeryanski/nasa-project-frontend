@@ -1,6 +1,18 @@
+import axios from "axios";
+
+const Client = axios.create({
+  baseURL: 'http://localhost:8080/',
+})
+
 async function httpGetPlanets() {
-  // TODO: Once API is ready.
-  // Load planets and return as JSON.
+  try {
+    const {data, status} = await Client.get('planets')
+    if (!status) throw new Error('Server is unresponsable')
+    return data.data;
+  } catch (e) {
+    console.error('Failed to load planets:', e);
+    return []
+  }
 }
 
 async function httpGetLaunches() {
