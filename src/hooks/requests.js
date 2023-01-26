@@ -1,38 +1,56 @@
 import axios from "axios";
 
 const Client = axios.create({
-  baseURL: 'http://localhost:8080/',
-})
+  baseURL: "http://localhost:8080/",
+});
 
 async function httpGetPlanets() {
   try {
-    const {data, status} = await Client.get('planets')
-    if (!status) throw new Error('Server is unresponsable')
+    const { data, status, messages } = await Client.get("planets");
+    if (!status) throw new Error(messages?.join(", "));
+
     return data.data;
   } catch (e) {
-    console.error('Failed to load planets:', e);
-    return []
+    console.error("Failed to load planets:", e);
+
+    return [];
   }
 }
 
 async function httpGetLaunches() {
-  // TODO: Once API is ready.
-  // Load launches, sort by flight number, and return as JSON.
+  try {
+    const { data, status, messages } = await Client.get("launches");
+    if (!status) throw new Error(messages?.join(", "));
+
+    return data.data;
+  } catch (e) {
+    console.error("Failed to load launches:", e);
+    return [];
+  }
 }
 
 async function httpSubmitLaunch(launch) {
-  // TODO: Once API is ready.
-  // Submit given launch data to launch system.
+  try {
+    const { data, status, messages } = await Client.post(`launches`, launch);
+    if (!status) throw new Error(messages?.join(", "));
+
+    return true;
+  } catch (e) {
+    console.error("Failed to load launches:", e);
+    return false;
+  }
 }
 
 async function httpAbortLaunch(id) {
-  // TODO: Once API is ready.
-  // Delete launch with given ID.
+  try {
+    const { data, status, messages } = await Client.delete(`launches/${id}`);
+    if (!status) throw new Error(messages?.join(", "));
+
+    return true;
+  } catch (e) {
+    console.error("Failed to load launches:", e);
+    return false;
+  }
 }
 
-export {
-  httpGetPlanets,
-  httpGetLaunches,
-  httpSubmitLaunch,
-  httpAbortLaunch,
-};
+export { httpGetPlanets, httpGetLaunches, httpSubmitLaunch, httpAbortLaunch };
